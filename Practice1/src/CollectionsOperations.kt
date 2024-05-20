@@ -107,5 +107,122 @@ fun main() {
     println(match)
     println(rest)
 
+    // testing predicate
+    println(numbers4.any { it.endsWith("e") }) // true
+    println(numbers4.none { it.endsWith("w") }) //true
+    println(numbers4.all { it.length > 1 }) //true
+
+    // + - operator for collection
+    val numbers5 = mutableListOf("one", "two", "three", "four")
+    val plusList = numbers5 + "five"
+    val minusList = numbers5 - mutableListOf("three", "four")
+    println(plusList)
+    println(minusList)
+
+    // Grouping
+    val numbers6 = listOf("one", "two", "three", "four", "five")
+    println(numbers6.groupBy { it.first().uppercase() })
+    println(numbers6.groupBy(keySelector = { it.first() }, valueTransform = { it.uppercase() }))
+
+    // Retrieving parts
+    val numbersStrings2 = listOf("one", "two", "three", "four", "five", "six")
+    println(numbersStrings2.slice(1..3))
+    println(numbersStrings2.slice(0..4 step 2))
+    println(numbersStrings2.slice(setOf(3, 5, 0)))
+
+    // take and drop
+    println(numbersStrings2.take(3))
+    println(numbersStrings2.takeLast(3))
+    println(numbersStrings2.drop(1))
+    println(numbersStrings2.dropLast(5))
+
+    println(numbersStrings2.takeWhile { !it.startsWith("f") })
+    println(numbersStrings2.takeLastWhile { it != "three" })
+    println(numbersStrings2.dropWhile { it.length == 3 })
+    println(numbersStrings2.dropLastWhile { it.contains("i") })
+
+    // chunked
+    val numbers7 = (0..13).toList()
+    println(numbers7.chunked(3))
+    println(numbers7.chunked(3) { it.sum() })
+
+    //windowed similar to chunked but more flexible
+    val numbersString = numbersStrings2
+    println(numbersString.windowed(3))
+
+    //retrieving element
+    val numbers8 = listOf("one", "two", "three", "four", "five")
+    println(numbers8.elementAt(3))
+    println(numbers8.first())
+    println(numbers8.last())
+
+    println(numbers8.first { it.length > 3 })
+    println(numbers8.last { it.startsWith("f") })
+    println(numbers8.random())
+    println(numbers8.isEmpty())
+
+    // ---------- //
+    val numbers9 = mutableListOf<Int>(2, 5, 1, 40, 20, 100, 60)
+    numbers9.sorted().forEach { println(it) }
+    val laptops = mutableListOf(
+        Laptop("Dell", 2021, 4, 600),
+        Laptop("Acer", 2020, 8, 800),
+        Laptop("Apple", 2022, 16, 1000)
+    )
+
+    laptops.sorted().forEach { println(it) }
+    laptops.sortedWith(ComparatorRam()).forEach { println(it) }
+    laptops.sortedWith(ComparatorYear()).forEach { println(it) }
+
+    laptops.sortedWith(compareBy { it.price }).forEach { println(it) }
+    laptops.sortedWith(compareBy { it.ram }).forEach { println(it) }
+    laptops.sortedWith(compareBy { it.year }).forEach { println(it) }
+
+    laptops.sortedBy { it.price }.forEach { println(it) }
+    laptops.sortedBy { it.ram }.forEach { println(it) }
+    laptops.sortedBy { it.year }.forEach { println(it) }
+
+    laptops.sortedWith(compareBy<Laptop> { it.year }.thenBy { it.price }.thenBy { it.ram }).forEach { println(it) }
+}
+
+data class Laptop(val brand: String, val year: Int, val ram: Int, val price: Int) : Comparable<Laptop> {
+    override fun compareTo(other: Laptop): Int {
+        return if (this.price > other.price) {
+            println("In if statement: Swapping ${this.brand} with ${other.brand}")
+            1
+        } else if (this.price < other.price) {
+            println("In else if statement: Swapping ${this.brand} with ${other.brand}")
+
+            -1
+        } else {
+            0
+        }
+    }
+
+}
+
+class ComparatorRam : Comparator<Laptop> {
+    override fun compare(o1: Laptop, o2: Laptop): Int {
+        return if (o1.ram > o2.ram) {
+            1
+        } else if (o1.ram < o2.ram) {
+            -1
+        } else {
+            0
+        }
+    }
+
+}
+
+class ComparatorYear : Comparator<Laptop> {
+    override fun compare(o1: Laptop, o2: Laptop): Int {
+        return if (o1.year > o2.year) {
+            1
+        } else if (o1.year < o2.year) {
+            -1
+        } else {
+            0
+        }
+    }
 
 }

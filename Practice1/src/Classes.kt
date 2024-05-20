@@ -10,3 +10,6 @@ class Car {
         println("The car is stopped")
     }
 }
+public fun getData(){// by default public
+    println("Getting the data")
+}
